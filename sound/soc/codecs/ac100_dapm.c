@@ -331,7 +331,7 @@ static void agc_enable(struct snd_soc_codec *codec,bool on)
 		reg_val |= (0x6<<0);
 
 		reg_val &= ~(0x7<<12);
-		reg_val |= (0x7<<12);
+		reg_val |= (0x2<<12);
 		snd_soc_write(codec, 0x82, reg_val);
 
 		reg_val = snd_soc_read(codec, 0x83);
@@ -339,8 +339,15 @@ static void agc_enable(struct snd_soc_codec *codec,bool on)
 		reg_val |= (0x6<<0);
 
 		reg_val &= ~(0x7<<12);
-		reg_val |= (0x7<<12);
+		reg_val |= (0x2<<12);
 		snd_soc_write(codec, 0x83, reg_val);
+
+		reg_val = snd_soc_read(codec, 0xb4);
+		reg_val |= (0x3<<6);
+		snd_soc_write(codec, 0xb4, reg_val);
+
+		snd_soc_write(codec, 0x93, 0x00ef);
+		snd_soc_write(codec, 0x94, 0xfac1);
 	} else {
 		reg_val = snd_soc_read(codec, MOD_CLK_ENA);
 		reg_val &= ~(0x1<<7);
@@ -404,7 +411,7 @@ static void set_configuration(struct snd_soc_codec *codec)
 		snd_soc_write(codec, ADC_VOL_CTRL, adc_digital_val);
 	}
 	if (agc_used) {
-		agc_config(codec);
+	//	agc_config(codec);
 	}
 	if (drc_used) {
 		drc_config(codec);
@@ -2531,7 +2538,7 @@ static void codec_resume_work(struct work_struct *work)
 	msleep(50);
 	set_configuration(codec);
 	if (agc_used) {
-		agc_config(codec);
+	//	agc_config(codec);
 	}
 	if (drc_used) {
 		drc_config(codec);
